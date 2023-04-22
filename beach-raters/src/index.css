@@ -8,7 +8,7 @@
 }
 
 .container {
-  margin-top: 500px;
+  margin-top: 200px;
 
   max-width: 1200px;
 
@@ -68,12 +68,13 @@
   box-sizing: border-box;
 }
 body {
-  background: url("./background.png") !important;
+  background: url("./background.png") no-repeat;
   background-size: cover;
   min-height: 100vh;
   display: flex;
   font-weight: 400;
   font-family: 'Fira Sans', sans-serif;
+  position: relative; /* Add this to make the absolute positioning work */
 }
 body::after {
   content: '';
@@ -99,10 +100,12 @@ body, html, .App, #root, .auth-wrapper {
   height: 100%;
 }
 .navbar-light {
-  /*background-color: #ffffff;*/
+  background: url("./background.png") !important;
+  background-size: cover;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
   display: flex;
   height: 150px;
+  position: fixed;
   justify-content: space-between;
   align-items: center;
   padding: 0;
@@ -301,4 +304,29 @@ body, html, .App, #root, .auth-wrapper {
 
 .video video {
   width: 100%;
+}
+
+
+
+.create-polls {
+  background-size: cover;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  height: relative;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+
+.create-poll-images {
+
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+.create-poll-images img {
+  max-width: 100%;
+  height: auto;
+  align-items: center;
 }

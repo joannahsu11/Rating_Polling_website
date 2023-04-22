@@ -44,11 +44,12 @@ function App() {
             </div>
           </div>
         </nav>
+        <Routes>
+            <Route path = "/home" element={<Home/>}/>
+        </Routes>
         <div class="background-image"></div>
         <div className="auth-wrapper">
-          <Routes>
-            <Route path = "/home" element={<Home/>}/>
-          </Routes>
+          
           <div className="auth-inner">
             <Routes>
               <Route exact path="/" element={<Login />} />
