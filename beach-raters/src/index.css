@@ -1,14 +1,96 @@
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800');
+@import url('https://fonts.googleapis.com/css?family=Exo&display=swap');
+@font-face {
+  font-family: 'platinum';
+  src: url('./retro.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.container {
+  margin-top: 200px;
+
+  max-width: 1200px;
+
+  padding: 30px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.logo {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.navbar ul {
+  display: flex;
+  list-style: none;
+}
+
+.navbar li + li {
+  margin-left: 20px;
+}
+
+.navbar a {
+  color: #333;
+  text-decoration: none;
+}
+
+.hero {
+  flex-direction: row;
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 12px
+}
+
+
 * {
   box-sizing: border-box;
 }
 body {
-  background: #1C8EF9 !important;
+  background: url("./background.png") no-repeat;
+  background-size: cover;
   min-height: 100vh;
   display: flex;
   font-weight: 400;
   font-family: 'Fira Sans', sans-serif;
+  position: relative; /* Add this to make the absolute positioning work */
 }
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('./water-overlay.png');
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: luminosity;
+  opacity: 0.5;
+  z-index: -1;
+}
+
 h1,h2,h3,h4,h5,h6,label,span {
   font-weight: 500;
   font-family: 'Fira Sans', sans-serif;
@@ -18,9 +100,30 @@ body, html, .App, #root, .auth-wrapper {
   height: 100%;
 }
 .navbar-light {
-  background-color: #ffffff;
+  background: url("./background.png") !important;
+  background-size: cover;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  display: flex;
+  height: 150px;
+  position: fixed;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  margin: 0;
 }
+
+.logo-title {
+  display: flex;
+  align-items: center;
+}
+
+.logo-title img {
+  height: 150px;
+  margin-right: 0px;
+  padding: 0;
+  margin: 0;
+}
+
 .auth-wrapper {
   display: flex;
   justify-content: center;
@@ -28,7 +131,7 @@ body, html, .App, #root, .auth-wrapper {
   text-align: left;
 }
 .auth-inner {
-  width: 450px;
+  width: 500px;
   margin: auto;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
@@ -59,4 +162,171 @@ body, html, .App, #root, .auth-wrapper {
 }
 .forgot-password a {
   color: #167bff;
+}
+
+/* Rating */
+
+.checked {
+  color: orange;
+}
+
+/* Three column layout */
+.side {
+  float: left;
+  width: 15%;
+  margin-top: 10px;
+}
+
+.middle {
+  float: left;
+  width: 70%;
+  margin-top: 10px;
+}
+
+/* Place text to the right */
+.right {
+  text-align: right;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* The bar container */
+.bar-container {
+  width: 100%;
+  background-color: #f1f1f1;
+  text-align: center;
+  color: white;
+}
+
+/* Individual bars */
+.bar-5 {width: 60%; height: 18px; background-color: #04AA6D;}
+.bar-4 {width: 30%; height: 18px; background-color: #2196F3;}
+.bar-3 {width: 10%; height: 18px; background-color: #00bcd4;}
+.bar-2 {width: 4%; height: 18px; background-color: #ff9800;}
+.bar-1 {width: 15%; height: 18px; background-color: #f44336;}
+
+/* Responsive layout - make the columns stack on top of each other instead of next to each other */
+@media (max-width: 400px) {
+  .side, .middle {
+    width: 100%;
+  }
+  /* Hide the right column on small screens */
+  .right {
+    display: none;
+  }
+}
+
+.rating-group {
+  display: flex;
+  vertical-align: middle;
+}
+
+/* make hover effect work properly in IE */
+.rating__icon {
+  pointer-events: none;
+}
+
+/* hide radio inputs */
+.rating__input {
+ position: absolute !important;
+ left: -9999px !important;
+}
+
+/* hide 'none' input from screenreaders */
+.rating__input--none {
+  display: none
+}
+
+/* set icon padding and size */
+.rating__label {
+  cursor: pointer;
+  padding: 0 0.1em;
+  font-size: 2rem;
+}
+
+/* set default star color */
+.rating__icon--star {
+  color: orange;
+}
+
+/* if any input is checked, make its following siblings grey */
+.rating__input:checked ~ .rating__label > .rating__icon--star {
+  color: #ddd;
+}
+
+/* make all stars orange on rating group hover */
+.rating-group:hover .rating__label .rating__icon--star {
+  color: orange;
+}
+
+/* make hovered input's following siblings grey on hover */
+.rating__input:hover ~ .rating__label .rating__icon--star {
+  color: #ddd;
+}
+
+.beach-raters-logo {
+  font-family: 'platinum', sans-serif;
+  font-style:normal;
+  font-weight: 900;
+  font-size: 70px;
+  line-height: 120px;
+  letter-spacing: 3px;
+
+  display: flex;
+  align-items: center;
+  -webkit-text-stroke: 0.5px rgb(94, 94, 94); /* Adds a 2px black outline */
+  
+  color: #FFB930;
+}
+
+.homeIntro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text {
+  width: 50%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.video {
+  width: 50%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.video video {
+  width: 100%;
+}
+
+
+
+.create-polls {
+  background-size: cover;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  height: relative;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+
+.create-poll-images {
+
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+.create-poll-images img {
+  max-width: 100%;
+  height: auto;
+  align-items: center;
 }

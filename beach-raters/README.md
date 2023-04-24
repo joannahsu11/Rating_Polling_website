@@ -1,3 +1,13 @@
+1. Right click on server.js (/src/server.js) and "Open in Integrated Terminal"
+2. In the terminal at the bottom, run **nodemon server.js** (You should see "Server Running...")
+3. Right click on App.js (/src/App.js) and "Open in Integrated Terminal"
+4. In the terminal at the bottom, run **npm install**
+5. Once npm install is finished, run **npm start**
+
+If everything works, it will output the react page locally on your computer
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
