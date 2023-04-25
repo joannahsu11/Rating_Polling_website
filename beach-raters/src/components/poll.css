@@ -1,0 +1,110 @@
+.poll {
+  font-size: 0.9rem;
+}
+
+
+.poll ul {
+  padding: 0;
+  width: 300px;
+  margin: auto;
+}
+
+.poll ul li {
+  list-style: none;
+  border: 2px solid #00ddf9;
+  border-radius: 3px;
+  line-height: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.poll ul li button {
+  border: none;
+  background: transparent;
+  outline: none;
+  color: #999;
+  height: 100%;
+  width: 100%;
+  display: block;
+  padding: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.poll ul li span {
+  display: none;
+}
+
+.poll ul.results li {
+  border-color: #999;
+}
+
+.poll ul.results li button span {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+/*pop up description*/
+.popup-description {
+  font-size: 30px;
+  font-weight: bold;
+  color: #333;
+}
+
+/*poll title*/
+.poll-title {
+  font-size: 40px;
+  font-weight: bold;
+  color: #333;
+}
+
+/*poll title*/
+.poll-description {
+  font-size: 20px;
+  color: #333;
+}
+
+/*pop up style*/
+.pop-up {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5%;
+  width: 50%;
+  height: 50%;
+  position: fixed;
+  top: 30%;
+  left: 25%;
+  border-color:#333;
+  padding: 50px;
+  background-color: #FFB930;
+  font-size: 25px;
+}
+
+.poll-button{
+  border-radius: 5%;
+  margin-left: auto;
+  width: 50%;
+  height: 40%;
+  border-color:#333;
+  margin-bottom: 30px;
+  background-color: rgba(242, 231, 207, 0.5);
+  font-size: 25px;
+}
+
+.vote-button{
+  border-radius: 5%;
+  margin-top: 10px;
+  margin-right: 10px;
+  width: 15%;
+  height: 12%;
+  border-color:#333;
+  background-color: white;
+  font-size: 25px;
+}
+
+
+input[type="radio"] {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px
+  
+}
