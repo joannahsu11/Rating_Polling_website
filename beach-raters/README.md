@@ -1,6 +1,6 @@
-1. Right click on server.js (/src/server.js) and "Open in Integrated Terminal"
+1. Right click on server.js (/server.js) and "Open in Integrated Terminal"
 2. In the terminal at the bottom, run **nodemon server.js** (You should see "Server Running...")
-3. Right click on App.js (/src/App.js) and "Open in Integrated Terminal"
+3. Right click on App.js (/beach-rater/src/App.js) and "Open in Integrated Terminal"
 4. In the terminal at the bottom, run **npm install**
 5. Once npm install is finished, run **npm start**
 
