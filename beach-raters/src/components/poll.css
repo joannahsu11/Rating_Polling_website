@@ -53,7 +53,7 @@
 
 /*poll title*/
 .poll-title {
-  font-size: 40px;
+  font-size: 30px;
   font-weight: bold;
   color: #333;
 }
@@ -69,7 +69,7 @@
   background: rgba(0, 0, 0, 0.5);
   border-radius: 5%;
   width: 50%;
-  height: 50%;
+  height: 60%;
   position: fixed;
   top: 30%;
   left: 25%;
@@ -90,15 +90,40 @@
   font-size: 25px;
 }
 
-.vote-button{
+.createPoll-button{
+  border-radius: 5%;
+  margin:auto;
+  width: 30%;
+  height: 40%;
+  border-color:#333;
+  margin-bottom: 30px;
+  background-color: rgb(207, 216, 242);
+  font-size: 25px;
+  float: right;
+}
+
+.poll-creation-buttons{
+  border-radius: 5%;
+  width: max-content;
+  height: max-content;
+  margin-right: 15px;
+  border-color:#333;
+  margin-bottom: 30px;
+  background-color: white;
+  font-size: 25px;
+}
+
+
+.option-button{
   border-radius: 5%;
   margin-top: 10px;
-  margin-right: 10px;
-  width: 15%;
+  margin-right: 20px;
+  width:max-content;
   height: 12%;
   border-color:#333;
   background-color: white;
   font-size: 25px;
+  display: flex;
 }
 
 
@@ -106,5 +131,19 @@ input[type="radio"] {
   width: 25px;
   height: 25px;
   margin-right: 10px
+  
+}
+
+input[type="text"] {
+  width: 400px;
+  height: 35px;
+  margin-left: 10px
+  
+}
+
+textarea[type="text"] {
+  width: 400px;
+  height: 35px;
+  margin-left: 10px
   
 }
