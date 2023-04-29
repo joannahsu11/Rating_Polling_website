@@ -1,6 +1,5 @@
 // v Create Poll
 // v Show Polls
-// v Show Polls I create
 
 import React, { useState, useEffect } from "react";
 import "./poll.css";
