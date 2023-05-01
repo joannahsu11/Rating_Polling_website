@@ -8,7 +8,8 @@ export default class SignUp extends Component {
       firstName:"",
       lastName:"",
       email:"",
-      password:""
+      password:"",
+      isLoggedIn:false
     };
 
 	this.handleSubmit = this.handleSubmit.bind(this);
@@ -16,7 +17,7 @@ export default class SignUp extends Component {
 
   handleSubmit(e){
     e.preventDefault();
-    const{firstName, lastName, email, password} = this.state;
+    const{firstName, lastName, email, password,isLoggedIn} = this.state;
     console.log(firstName, lastName, email, password);
     fetch("http://localhost:5000/register", {
       method: "POST",
@@ -30,7 +31,8 @@ export default class SignUp extends Component {
         firstName,
         lastName,
         email,
-        password
+        password,
+        isLoggedIn
         }),
       })
         .then((res) => res.json())

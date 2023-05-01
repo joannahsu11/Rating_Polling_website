@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -11,6 +11,15 @@ import Polling from './components/polling'
 import sharkHeader from './shark-header.png'
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
+
+  const handleLogin = (email) => {
+    setEmail(email);
+    setIsLoggedIn(true);
+  };
+
+  
   return (
     <Router>
       <div className="App">
@@ -62,10 +71,10 @@ function App() {
             <Routes>
               <Route exact path="/" element={<Login />} />
               
-              <Route path="/sign-in" element={<Login />} />
+              <Route path="/sign-in" element={<Login onLogin={handleLogin}/>} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path = "/rating" element={<Rating />}/>
-              <Route path="/polling" element={<Polling />}/>
+              <Route path="/polling" element={<Polling email={email}/>}/>
             </Routes>
           </div>
           
