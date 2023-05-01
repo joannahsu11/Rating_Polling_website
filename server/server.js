@@ -75,6 +75,39 @@ app.post("/poll",async(req,res)=>{
     }
 });
 
+const Rate = mongoose.model("Rating")
+app.get('/rate', async (req, res) => {
+    try {
+      const ratings = await Rate.find(); // retrieve all users from MongoDB
+      res.send(ratings); 
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error'); // handle errors
+    }
+  });
+  
+  app.post("/rate",async(req,res)=>{
+      const {id,title, description, options,totalVotes,voted,useremail,voter} = req.body;
+      
+      try{
+          await Rate.create({
+            id: id,
+            title: title,
+            description: description,
+            options: options,
+            totalVotes: totalVotes,
+            voted: voted,
+            useremail:useremail,
+            voter:voter
+          });
+          res.send({status: "ok"});
+      }
+      catch(error){
+          res.send({status: "error"});
+      }
+  });
+  
+
 const User = mongoose.model("UserInfo");
 app.post("/register",async(req,res)=>{
     const {firstName,lastName, email, password} = req.body;

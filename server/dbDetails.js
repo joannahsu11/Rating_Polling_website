@@ -16,6 +16,8 @@ const PollingSchema = new mongoose.Schema(
     }
 );
 
+
+
 mongoose.model("polling-polls", PollingSchema);
 
 const VotingSchema = new mongoose.Schema(
@@ -30,6 +32,7 @@ const VotingSchema = new mongoose.Schema(
 
 mongoose.model("polling-votes", VotingSchema);
 
+
 const UserDetailsSchema = new mongoose.Schema(
     {
         firstName:String,
@@ -43,3 +46,22 @@ const UserDetailsSchema = new mongoose.Schema(
 );
 
 mongoose.model("UserInfo", UserDetailsSchema);
+
+
+const RatingSchema = new mongoose.Schema(
+    {
+        id: {type: Number},
+        title:{type: String},
+        description:{type: String},
+        options: {type: Array},
+        totalVotes:{ type: Number},
+        voted:  { type: Boolean},
+        useremail:{type: String},
+        voter:{type: String},
+    },
+    {
+        collection: "Rating"
+    }
+);
+
+mongoose.model('Rating', RatingSchema);

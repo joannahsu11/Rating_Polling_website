@@ -7,6 +7,7 @@ import Login from './components/login.component'
 import SignUp from './components/signup.component'
 import Rating from './components/rating'
 import Polling from './components/polling'
+import CreateRating from './components/createRating'
 
 import sharkHeader from './shark-header.png'
 
@@ -47,6 +48,11 @@ function App() {
                     Poll
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to={'/createRating'}>
+                    createRating
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -55,7 +61,6 @@ function App() {
             <Route path = "/home" element={<Home/>}/>
         </Routes>
         <div class="background-image"></div>
-
         <div className="auth-wrapper">
           
           <div className="auth-inner">
@@ -65,12 +70,11 @@ function App() {
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path = "/rating" element={<Rating />}/>
-              <Route path="/polling" element={<Polling />}/>
+              <Route path = "/polling" element={<Polling />}/>
+              <Route path="/createRating" element={<CreateRating />}/>
             </Routes>
           </div>
-          
         </div>
-
       </div>
     </Router>
   )
