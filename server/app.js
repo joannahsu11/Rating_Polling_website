@@ -19,8 +19,101 @@ mongoose.connect(mongoUrl,{
     })
 .catch(e => console.log(e));
 
+<<<<<<< Updated upstream:server/app.js
 require("./userDetails")
+=======
+require("./dbDetails")
 
+const PollData = mongoose.model("polling-polls");
+
+const VoteData=mongoose.model("polling-votes");
+
+app.get('/poll', async (req, res) => {
+  try {
+    const polls = await PollData.find(); // retrieve all users from MongoDB
+    res.send(polls); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error'); // handle errors
+  }
+});
+
+
+app.post("/poll",async(req,res)=>{
+    const {id,title, description, options,totalVotes,voted,useremail,voter} = req.body;
+    
+    try{
+        await PollData.create({
+            id: id,
+            title: title,
+            description: description,
+            options: options,
+            totalVotes: totalVotes,
+            voted: voted,
+            useremail:useremail,
+            voter:voter
+        });
+        res.send({status: "ok"});
+    }
+    catch(error){
+        res.send({status: "error"});
+    
+
+    }
+});
+
+
+app.post("/poll",async(req,res)=>{
+    const {id,useremail} = req.body;
+    
+    try{
+        await VoteData.create({
+            poll_id: id,
+            voter:useremail
+        });
+        res.send({status: "ok"});
+    }
+    catch(error){
+        res.send({status: "error"});
+    }
+});
+>>>>>>> Stashed changes:server/server.js
+
+
+const Rate = mongoose.model("Rating")
+app.get('/rate', async (req, res) => {
+    try {
+      const ratings = await Rate.find(); // retrieve all users from MongoDB
+      res.send(ratings); 
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error'); // handle errors
+    }
+  });
+  
+  app.post("/rate",async(req,res)=>{
+      const {id,title, description, options,totalVotes,voted,useremail,voter} = req.body;
+      
+      try{
+          await Rate.create({
+            id: id,
+            title: title,
+            description: description,
+            options: options,
+            totalVotes: totalVotes,
+            voted: voted,
+            useremail:useremail,
+            voter:voter
+          });
+          res.send({status: "ok"});
+      }
+      catch(error){
+          res.send({status: "error"});
+      }
+  });
+
+
+  
 const User = mongoose.model("UserInfo");
 app.post("/register",async(req,res)=>{
     const {firstName,lastName, email, password} = req.body;

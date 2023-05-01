@@ -7,6 +7,7 @@ import Login from './components/login.component'
 import SignUp from './components/signup.component'
 import Rating from './components/rating'
 import Polling from './components/polling'
+import CreateRating from './components/createRating'
 
 import sharkHeader from './shark-header.png'
 
@@ -47,6 +48,11 @@ function App() {
                     Poll
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to={'/createRating'}>
+                    createRating
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -64,7 +70,12 @@ function App() {
               <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />
               <Route path = "/rating" element={<Rating />}/>
+<<<<<<< Updated upstream
               <Route path = "/polling" element={<Polling />}/>
+=======
+              <Route path="/polling" element={<Polling />}/>
+              <Route path="/createRating" element={<CreateRating />}/>
+>>>>>>> Stashed changes
             </Routes>
           </div>
         </div>
