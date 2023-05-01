@@ -13,7 +13,14 @@ function Poll() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [options, setOptions] = useState([]);
+  //const [options, setOptions] = useState([]);
+  const options = [
+    { id: 0, content: "1 Star", votes: 0 },
+    { id: 1, content: "2 Star", votes: 0 },
+    { id: 2, content: "3 Star", votes: 0 },
+    { id: 3, content: "4 Star", votes: 0 },
+    { id: 4, content: "5 Star", votes: 0 }
+  ];
   const [showPopup, setShowPopup] = useState(false);
   const [selectedPoll, setSelectedPoll] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -25,16 +32,7 @@ function Poll() {
   }, []);
 
   
-  const handleAddOption = () => {
-    setOptions([...options, { id: options.length, votes: 0, content: "" }]);
-  };
-
-
-  const handleOptionChange = (index, content) => {
-    const newOptions = [...options];
-    newOptions[index].content = content;
-    setOptions(newOptions);
-  };
+  
 
 
   
@@ -176,21 +174,7 @@ function Poll() {
           />
         </label>
         <br />
-        <label>
-          Options:
-          <ul>
-            {options.map((option, index) => (
-              <li key={option.id}>
-                <input
-                  type="text"
-                  value={option.content}
-                  onChange={(e) => handleOptionChange(index, e.target.value)}
-                />
-              </li>
-            ))}
-          </ul>
-          <button className="poll-creation-buttons" onClick={handleAddOption}>Add Option</button>
-        </label>
+          
         <br />
         <div>
           <button className="poll-creation-buttons" onClick={handleCreatePoll}>Create Poll</button>
