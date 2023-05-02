@@ -87,14 +87,58 @@ app.post("/userData", async (req, res) => {
 const Poll = mongoose.model("polling_collection");
 
 app.get('/poll', async (req, res) => {
+  const today = new Date();
     try {
-      const polls = await Poll.find(); // retrieve all users from MongoDB
+      const polls = await Poll.find({
+        $or: [
+          { enddate: { $gt: today } }, // date is later than today
+          { totalVotes: { $gt: 50 } } // total vote count is greater than 50
+        ]
+      });
       res.send(polls); 
     } catch (err) {
       console.error(err);
       res.status(500).send('Internal Server Error'); // handle errors
     }
   });
+
+app.get('/mypoll', async (req, res) => {
+    const creater = req.query.creater;
+    const today = new Date();
+    try {
+      const polls = await Poll.find({ creater: { $regex: creater} }); 
+      res.send(polls); 
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error'); // handle errors
+    }
+  });
+
+app.get('/searchpoll', async (req, res) => {
+  const searchTerm = req.query.searchTerm;
+  try {
+    const polls = await Poll.find({ title: { $regex: searchTerm, $options: 'i' } });
+    console.log(polls);
+    res.send(polls); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.delete('/deletepoll', async (req, res) => {
+  const poll_id = req.body.poll_id;
+  try {
+    const result = await Poll.deleteOne({ poll_id:poll_id });
+    if (result.deletedCount === 1) {
+      res.status(200).send('Poll deleted successfully.');
+    } else {
+      res.status(404).send('Poll not found.');
+    }
+  } catch (error) {
+    res.send({status: "error"});
+  }
+});
 
 app.post("/poll",async(req,res)=>{
     
@@ -141,20 +185,6 @@ app.post("/votepoll",async(req,res)=>{
 });
 
 
-app.get('/if-voted', async (req, res) => {
-    console.log(req.body);
-    try {
-        const result = await Vote.findOne({ poll_id: req.body.pollId, voter: req.body.voter });
-        if (result) {
-          res.status(200).send({ voted: true });
-        } else {
-          res.status(200).send({ voted: false });
-        }
-      } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal server error');
-      }
-  });
 
 const Rate = mongoose.model("Rating")
 app.get('/rate', async (req, res) => {

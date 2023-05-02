@@ -21,6 +21,7 @@ const PollingDetailsSchema = new mongoose.Schema(
         poll_id:{type: Number},
         creater:{type: String},
         title:{type: String},
+        enddate:{type:Date},
         description: {type: String},
         options: {type: Array},
         totalVotes:{type: Number}

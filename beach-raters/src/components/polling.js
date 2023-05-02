@@ -1,26 +1,65 @@
+import { Tabs, Tab } from 'react-bootstrap';
 import React, { useState, useEffect } from "react";
 import "./poll.css";
 import Modal from "react-modal";
+import { Dropdown } from "react-bootstrap";
+
+
 
 function Polling(props) {
 
-  const [pollData, setPollData] = useState([]);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [allPollData, setAllPollData] = useState([]);
+  const [myPollData, setMyPollData] = useState([]);
+  const [searchedPollData, setSearchedPollData] = useState([]);
+  const [pollModalIsOpen, setPollModalIsOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [totalVotes, settotalVotes] = useState([]);
-  const [voted, setVoted] = useState("");
   const [description, setDescription] = useState("");
+  const [enddate, setEnddate] = useState("");
   const [options, setOptions] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPollPopup, setShowPollPopup] = useState(false);
+  const [showResultPopup, setShowResultPopup] = useState(false);
   const [selectedPoll, setSelectedPoll] = useState(null);
-  const [hideOptions, setHideOptions] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+  const [searchTerm, setSearchTerm] = useState('');
+  const [ratingValue, setRatingValue] = useState(0);
+  const [sortBy, setSortBy] = useState("recent"); // initial value
+
+  const handleRatingChange = (e) => {
+    setRatingValue(parseInt(e.target.value));
+  };
+
+  const handleSortByChange = (e) => {
+    setSortBy(e.target.value);
+  };
+
 
 
   useEffect(() => {
-    fetch("http://localhost:5000/poll")
-      .then((response) => response.json())
-      .then((data) => setPollData(data));
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/poll')
+      .then((response) => response.json())
+      .then((data) => setAllPollData(data));
+      
+  }, []);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/mypoll?creater=${props.email}`)
+      .then((response) => response.json())
+      .then((data) => setMyPollData(data));
+  }, []);
+
+  const searchPolls = () => {
+    fetch(`http://localhost:5000/searchpoll?searchTerm=${searchTerm}`)
+      .then((response) => response.json())
+      .then((data) => setSearchedPollData(data));
+  }
+
 
   const handleAddOption = () => {
     setOptions([...options, { id: options.length, votes: 0, content: "" }]);
@@ -32,31 +71,34 @@ function Polling(props) {
     setOptions(newOptions);
   };
 
-  const openPopup = async (poll) => {
-    const response = await fetch('http://localhost:5000/if-voted',{poll});
-    const thePoll = await response.json();
+  const openPoll = async (poll) => {
     setSelectedPoll(poll);
-    console.log(poll);
-    if (thePoll.voted) {
-      setHideOptions(true);
-    } else {
-      setHideOptions(true);
-    }
-    setShowPopup(true);
+    setShowPollPopup(true);
+    //setResultModalIsOpen(false);
   };
 
-  const closePopup = () => {
+  const closePoll = () => {
     setSelectedPoll(null);
-    setShowPopup(false);
+    setShowPollPopup(false);
+  };
+
+  const openResults = async (poll) => {
+    setSelectedPoll(poll);
+    setShowPollPopup(true);
+    setShowResultPopup(true);
+  };
+
+  const closeResults = () => {
+    setShowPollPopup(true);
+    setSelectedPoll(null);
+    setShowResultPopup(false);
   };
 
 
-  const handleCreatePoll = () => {
-    const creater=props.email;
-    const poll_id=pollData.length;
-    fetch("http://localhost:5000/poll", {
-      method: 'POST',
-      body: JSON.stringify({ poll_id, creater, title, description, options, totalVotes: 0}),
+  const HandleDeletePoll = (poll_id) => {
+    fetch("http://localhost:5000/deletepoll", {
+      method: 'DELETE',
+      body: JSON.stringify({ poll_id}),
       headers: {
         "Content-Type":"application/json",
         Accept: "application/json",
@@ -65,13 +107,34 @@ function Polling(props) {
     })
       .then((response) => response.json())
       .then((data) => console.log(data));
-    setModalIsOpen(false);
+    setPollModalIsOpen(false);
+  };
+
+
+
+
+  const handleCreatePoll = () => {
+    const creater=props.email;
+    const poll_id=allPollData.length+1;
+    fetch("http://localhost:5000/poll", {
+      method: 'POST',
+      body: JSON.stringify({ poll_id, creater, title, description,enddate,options, totalVotes: 0}),
+      headers: {
+        "Content-Type":"application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+    setPollModalIsOpen(false);
   };
 
 
   const handleVote = (pollId, option) => {
+    console.log(pollId, option);
     const voter=props.email;
-    const updatedPolls = pollData.map((poll) => {
+    const updatedPolls = allPollData.map((poll) => {
       if (poll.poll_id === pollId) {
         const updatedOptions = poll.options.map((o) => {
           if (o.id === option.id) {
@@ -93,8 +156,10 @@ function Polling(props) {
     });
 
     const updatedPoll = updatedPolls.find((poll) => poll.poll_id === pollId);
-    setPollData(updatedPolls);
-    closePopup();		
+    setAllPollData(updatedPolls);
+    setMyPollData(updatedPolls);
+    setSearchedPollData(updatedPolls);
+    closePoll();		
 
 
     //update results
@@ -121,55 +186,55 @@ function Polling(props) {
     })
     .then((response) => response.json())
     .then((data) => console.log(data));
-    setModalIsOpen(false);
+    setPollModalIsOpen(false);
 
   };
 
-  
-  console.log(selectedPoll);
   return (
-    <div className="poll">
-      <button className="createPoll-button" onClick={() => setModalIsOpen(true)}>Create Poll</button>
-      {pollData.map((poll) => (
+    <Tabs defaultActiveKey="tab1" id="tabs">
+      <Tab eventKey="tab1" title="All Polls">
+      <div className="poll">
+      <div className="current-time">{currentTime}</div>
+      
+      {
+        allPollData.map((poll) => (
         <div key={poll.poll_id}>
           <h1 className="poll-title">{poll.title}</h1>
-
           <p className="poll-description">{poll.description}</p>
-          <button className="poll-button" onClick={() => openPopup(poll)}>Show Poll
+          <p className="poll-description">End Date: {poll.enddate}</p>
+          <p className="poll-description">Total Votes: {poll.totalVotes}</p>
+          <button className="poll-button" onClick={() => openPoll(poll)}>Show Poll
           </button>
         </div>
-      ))}
-      <Modal className="pop-up" isOpen={showPopup} onRequestClose={closePopup}>
+        ))
+      }
+      <Modal className="pop-up" isOpen={showPollPopup} onRequestClose={closePoll}>
         <h2 className="popup-description">{selectedPoll?.description}</h2>
-        
-        {
-        hideOptions ? (
-          <>
-            {selectedPoll?.options.map((option) => (
+          {selectedPoll?.options.map((option) => (
+            <button
+              key={option.id}
+              className="option-button"
+              onClick={() => handleVote(selectedPoll?.poll_id, option)}
+            >
+              {option.content}
+            </button>
+          ))}
+          <button onClick={closePoll} className="vote-button">
+            Close
+          </button>
+          <button onClick={() => openResults(selectedPoll)}>Show Result</button>
+          <Modal className="pop-up" isOpen={showResultPopup}  onRequestClose={closePoll}>
+          {
+            selectedPoll?.options.map((option) => (
               <ul> {option.content} ({option.votes} votes) </ul>
             ))}
             <p>Total Votes: {selectedPoll?.totalVotes}</p>
-          </>
-        ) : (
-          <>
-            {selectedPoll?.options.map((option) => (
-              <button
-                key={option.id}
-                className="option-button"
-                onClick={() => handleVote(selectedPoll?.id, option)}
-              >
-                {option.content}
-              </button>
-            ))}
-            <button onClick={closePopup} className="vote-button">
-              Close
+            <button onClick={closeResults} className="vote-button">
+              Hide Result
             </button>
-          </>
-        )}
+          </Modal>
       </Modal>
-
-
-      <Modal className="pop-up" isOpen={modalIsOpen}>
+      <Modal className="pop-up" isOpen={pollModalIsOpen}>
         <h2>Create a Poll</h2>
         <label>
           Title:
@@ -186,6 +251,14 @@ function Polling(props) {
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+          />
+        </label>
+        <label>
+          End Date:
+          <input
+            type="date"
+            value={enddate}
+            onChange={(e) => setEnddate(e.target.value)}
           />
         </label>
         <br />
@@ -206,9 +279,137 @@ function Polling(props) {
         </label>
         <br />
         <button className="poll-creation-buttons" onClick={handleCreatePoll}>Create Poll</button>
-        <button className="poll-creation-buttons" onClick={() => setModalIsOpen(false)}>Cancel</button>
+        <button className="poll-creation-buttons" onClick={() => setPollModalIsOpen(false)}>Cancel</button>
       </Modal>
     </div>
+      </Tab>
+
+      <Tab eventKey="tab2" title="My Polls">
+          <div className="poll">
+          <div className="current-time">{currentTime}</div>
+          <h1>Hi! {props.email}</h1>
+          <button className="createPoll-button" onClick={() => setPollModalIsOpen(true)}>Create Poll</button>
+          {
+            myPollData.map((poll) => (
+            <div key={poll.poll_id}>
+              <h1 className="poll-title">{poll.title}</h1>
+              <p className="poll-description">{poll.description}</p>
+              <button className="poll-button" onClick={() => openPoll(poll)}>Show Poll</button>
+              <button className="poll-button" onClick={() => HandleDeletePoll(poll.poll_id)}>Delete Poll
+              </button>
+            </div>
+            ))
+          }
+          <Modal className="pop-up" isOpen={showResultPopup}  onRequestClose={closePoll}>
+          {
+            selectedPoll?.options.map((option) => (
+              <ul> {option.content} ({option.votes} votes) </ul>
+            ))}
+            <p>Total Votes: {selectedPoll?.totalVotes}</p>
+            <button onClick={closeResults} className="vote-button">
+              Hide Result
+            </button>
+          </Modal>
+          <Modal className="pop-up" isOpen={pollModalIsOpen}>
+            <h2>Create a Poll</h2>
+            <label>
+              Title:
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              Description:
+              <input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </label>
+            <label>
+              End Date:
+              <input
+                type="date"
+                value={enddate}
+                onChange={(e) => setEnddate(e.target.value)}
+              />
+            </label>
+            <br />
+            <label>
+              Options:
+              <ul>
+                {options.map((option, index) => (
+                  <li key={option.id}>
+                    <input
+                      type="text"
+                      value={option.content}
+                      onChange={(e) => handleOptionChange(index, e.target.value)}
+                    />
+                  </li>
+                ))}
+              </ul>
+              <button className="poll-creation-buttons" onClick={handleAddOption}>Add Option</button>
+            </label>
+            <br />
+            <button className="poll-creation-buttons" onClick={handleCreatePoll}>Create Poll</button>
+            <button className="poll-creation-buttons" onClick={() => setPollModalIsOpen(false)}>Cancel</button>
+          </Modal>
+        </div>
+      </Tab>
+      <Tab eventKey="tab3" title="Search for Polls">
+        <div>
+          <label>
+            Search:
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </label>
+          <button onClick={() => searchPolls()}>Search</button>
+            {
+              searchedPollData.map((poll) => (
+              <div key={poll.poll_id}>
+                <h1 className="poll-title">{poll.title}</h1>
+                <p className="poll-description">{poll.description}</p>
+                <button className="poll-button" onClick={() => openPoll(poll)}>Show Poll
+                </button>
+              </div>
+              ))
+            }
+            <Modal className="pop-up" isOpen={showPollPopup} onRequestClose={closePoll}>
+              <h2 className="popup-description">{selectedPoll?.description}</h2>
+                {selectedPoll?.options.map((option) => (
+                  <button
+                    key={option.id}
+                    className="option-button"
+                    onClick={() => handleVote(selectedPoll?.poll_id, option)}
+                  >
+                    {option.content}
+                  </button>
+                ))}
+                <button onClick={closePoll} className="vote-button">
+                  Close
+                </button>
+                <button onClick={() => openResults(selectedPoll)}>Show Result</button>
+                <Modal className="pop-up" isOpen={showResultPopup}  onRequestClose={closePoll}>
+                {
+                  selectedPoll?.options.map((option) => (
+                    <ul> {option.content} ({option.votes} votes) </ul>
+                  ))}
+                  <p>Total Votes: {selectedPoll?.totalVotes}</p>
+                  <button onClick={closeResults} className="vote-button">
+                    Hide Result
+                  </button>
+                </Modal>
+            </Modal>
+        </div>
+      </Tab>
+
+    </Tabs>
   );
 }
 

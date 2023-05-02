@@ -69,7 +69,7 @@ function App() {
           
           <div className="auth-inner">
             <Routes>
-              <Route exact path="/" element={<Login />} />
+              <Route exact path="/sign-in" element={<Login onLogin={handleLogin}/>} />
               
               <Route path="/sign-in" element={<Login onLogin={handleLogin}/>} />
               <Route path="/sign-up" element={<SignUp />} />
