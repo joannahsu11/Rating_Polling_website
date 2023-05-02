@@ -99,7 +99,7 @@ function Polling(props) {
     const rate_id=allRateData.length+1;
     fetch("http://localhost:5000/rate", {
       method: 'POST',
-      body: JSON.stringify({ rate_id, creater, title, description,enddate,options, totalVotes: 0}),
+      body: JSON.stringify({ rate_id, creater, title, description,enddate,options, totalVotes: 0,avgRating: 0}),
       headers: {
         "Content-Type":"application/json",
         Accept: "application/json",
@@ -114,7 +114,6 @@ function Polling(props) {
 
   const handleVote = (rateId, option) => {
     console.log(rateId, option);
-    const voter=props.id;
     const updatedRates = allRateData.map((rate) => {
       if (rate.rate_id === rateId) {
         const updatedOptions = rate.options.map((o) => {
@@ -126,15 +125,23 @@ function Polling(props) {
           }
           return o;
         });
+        const totalRating = updatedOptions.reduce((acc, o) => {
+          return acc + o.content * o.votes;
+        }, 0);
+        const totalVotes = updatedOptions.reduce((acc, o) => {
+          return acc + o.votes;
+        }, 0);
         return {
           ...rate,
           options: updatedOptions,
-          totalVotes: rate.totalVotes + 1,
+          totalVotes: totalVotes,
+          totalRating: totalRating,
+          avgRating: totalVotes > 0 ? totalRating / totalVotes : 0,
         };
       }
-
       return rate;
     });
+    ;
 
     const updatedPoll = updatedRates.find((rate) => rate.rate_id === rateId);
     setAllRateData(updatedRates);
@@ -168,9 +175,7 @@ function Polling(props) {
         allRateData.map((rate) => (
         <div key={rate.rate_id}>
           <h1 className="poll-title">{rate.title}</h1>
-          <p className="poll-description">{rate.description}</p>
           <p className="poll-description">End Date: {rate.enddate}</p>
-          <p className="poll-description">Total Votes: {rate.totalVotes}</p>
           <button className="poll-button" onClick={() => openPoll(rate)}>Show Rate
           </button>
         </div>
@@ -181,7 +186,7 @@ function Polling(props) {
           {selectedRate?.options.map((option) => (
             <button
               key={option.id}
-              className="option-button"
+              className="rating-option-button"
               onClick={() => handleVote(selectedRate?.rate_id, option)}
             >
               {option.content}
@@ -197,6 +202,7 @@ function Polling(props) {
               <ul> {option.content} ({option.votes} votes) </ul>
             ))}
             <p>Total Votes: {selectedRate?.totalVotes}</p>
+            <p>Rating: {selectedRate?.avgRating.toFixed(2)}</p>
             <button onClick={closeResults} className="vote-button">
               Hide Result
             </button>
@@ -246,7 +252,6 @@ function Polling(props) {
             myRateData.map((poll) => (
             <div key={poll.rate_id}>
               <h1 className="poll-title">{poll.title}</h1>
-              <p className="poll-description">{poll.description}</p>
               <button className="poll-button" onClick={() => openPoll(poll)}>Show Poll</button>
               <button className="poll-button" onClick={() => HandleDeletePoll(poll.rate_id)}>Delete Poll
               </button>
@@ -259,6 +264,7 @@ function Polling(props) {
               <ul> {option.content} ({option.votes} votes) </ul>
             ))}
             <p>Total Votes: {selectedRate?.totalVotes}</p>
+            <p>Rating: {selectedRate?.avgRating.toFixed(2)}</p>
             <button onClick={closeResults} className="vote-button">
               Hide Result
             </button>
@@ -323,10 +329,10 @@ function Polling(props) {
                 {selectedRate?.options.map((option) => (
                   <button
                     key={option.id}
-                    className="option-button"
+                    className="rating-option-button"
                     onClick={() => handleVote(selectedRate?.rate_id, option)}
                   >
-                    {option.content}
+                    {option.content} star
                   </button>
                 ))}
                 <button onClick={closePoll} className="vote-button">
@@ -339,7 +345,7 @@ function Polling(props) {
                     <ul> {option.content} ({option.votes} votes) </ul>
                   ))}
                   <p>Total Votes: {selectedRate?.totalVotes}</p>
-                  <p>This is where the rating goes (x/5)</p>
+                  <p>Rating: {selectedRate?.avgRating.toFixed(2)}</p>
                   <button onClick={closeResults} className="vote-button">
                     Hide Result
                   </button>
@@ -353,3 +359,4 @@ function Polling(props) {
 }
 
 export default Polling;
+
