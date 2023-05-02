@@ -20,16 +20,6 @@ function Polling(props) {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const [searchTerm, setSearchTerm] = useState('');
   const [ratingValue, setRatingValue] = useState(0);
-  const [sortBy, setSortBy] = useState("recent"); // initial value
-
-  const handleRatingChange = (e) => {
-    setRatingValue(parseInt(e.target.value));
-  };
-
-  const handleSortByChange = (e) => {
-    setSortBy(e.target.value);
-  };
-
 
 
   useEffect(() => {
@@ -107,9 +97,6 @@ function Polling(props) {
       .then((data) => console.log(data));
     setPollModalIsOpen(false);
   };
-
-
-
 
   const handleCreatePoll = () => {
     const creater=props.email;
