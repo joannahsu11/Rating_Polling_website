@@ -37,7 +37,7 @@ function Polling(props) {
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/mypoll?creater=${props.email}`)
+    fetch(`http://localhost:5000/mypoll?creater=${props.id}`)
       .then((response) => response.json())
       .then((data) => setMyPollData(data));
   }, []);
@@ -99,7 +99,7 @@ function Polling(props) {
   };
 
   const handleCreatePoll = () => {
-    const creater=props.email;
+    const creater=props.id;
     const poll_id=allPollData.length+1;
     fetch("http://localhost:5000/poll", {
       method: 'POST',
@@ -118,7 +118,7 @@ function Polling(props) {
 
   const handleVote = (pollId, option) => {
     console.log(pollId, option);
-    const voter=props.email;
+    const voter=props.id;
     const updatedPolls = allPollData.map((poll) => {
       if (poll.poll_id === pollId) {
         const updatedOptions = poll.options.map((o) => {
@@ -259,7 +259,7 @@ function Polling(props) {
       <Tab eventKey="tab2" title="My Polls">
           <div className="poll">
           <div className="current-time">{currentTime}</div>
-          <h1>Hi! {props.email}</h1>
+          <h1>Hi! {props.id}</h1>
           <button className="createPoll-button" onClick={() => setPollModalIsOpen(true)}>Create Poll</button>
           {
             myPollData.map((poll) => (
