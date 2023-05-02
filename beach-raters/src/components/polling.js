@@ -4,8 +4,6 @@ import "./poll.css";
 import Modal from "react-modal";
 import { Dropdown } from "react-bootstrap";
 
-
-
 function Polling(props) {
 
   const [allPollData, setAllPollData] = useState([]);
