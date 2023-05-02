@@ -13,7 +13,6 @@ const UserDetailsSchema = new mongoose.Schema(
         collection: "UserInfo",
     }
 );
-
 mongoose.model("UserInfo", UserDetailsSchema);
 
 
@@ -31,27 +30,8 @@ const PollingDetailsSchema = new mongoose.Schema(
         collection: "polling_collection",
     }
 );
-
 mongoose.model("polling_collection", PollingDetailsSchema);
 
-
-const RatingSchema = new mongoose.Schema(
-    {
-        id: {type: Number},
-        title:{type: String},
-        description:{type: String},
-        options: {type: Array},
-        totalVotes:{ type: Number},
-        voted:  { type: Boolean},
-        useremail:{type: String},
-        voter:{type: String},
-    },
-    {
-        collection: "Rating"
-    }
-);
-
-mongoose.model('Rating', RatingSchema);
 
 const voteDetailsSchema = new mongoose.Schema(
     {
@@ -62,5 +42,37 @@ const voteDetailsSchema = new mongoose.Schema(
         collection: "votes_collection",
     }
 );
-
 mongoose.model("votes_collection", voteDetailsSchema);
+
+
+
+const RatingDetailSchema = new mongoose.Schema(
+    {
+        rate_id:{type: Number},
+        creater:{type: String},
+        title:{type: String},
+        enddate:{type:Date},
+        description: {type: String},
+        options: {type: Array},
+        totalVotes:{type: Number}
+    },
+    {
+        collection: "rating_collection",
+    }
+);
+mongoose.model("rating_collection", RatingDetailSchema);
+
+
+const rateVoteDetailsSchema = new mongoose.Schema(
+    {
+        voter:{type: String},
+        rate_id:{type: Number}
+    },
+    {
+        collection: "rate_votes_collection",
+    }
+);
+mongoose.model("rate_votes_collection", rateVoteDetailsSchema);
+
+
+

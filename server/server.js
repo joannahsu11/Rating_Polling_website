@@ -170,8 +170,6 @@ app.post("/update-poll",async(req,res)=>{
     });
 });
 
-
-
 const Vote = mongoose.model("votes_collection");
 
 app.post("/votepoll",async(req,res)=>{
@@ -187,37 +185,122 @@ app.post("/votepoll",async(req,res)=>{
 
 
 
-const Rate = mongoose.model("Rating")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const Rate = mongoose.model("rating_collection");
+
 app.get('/rate', async (req, res) => {
+  const today = new Date();
     try {
-      const ratings = await Rate.find(); // retrieve all users from MongoDB
-      res.send(ratings); 
+      const rates = await Rate.find({
+        $or: [
+          { enddate: { $gt: today } }, // date is later than today
+          { totalVotes: { $gt: 50 } } // total vote count is greater than 50
+        ]
+      });
+      res.send(rates); 
     } catch (err) {
       console.error(err);
       res.status(500).send('Internal Server Error'); // handle errors
     }
   });
-  
-  app.post("/rate",async(req,res)=>{
-      const {id,title, description, options,totalVotes,voted,useremail,voter} = req.body;
-      
-      try{
-          await Rate.create({
-            id: id,
-            title: title,
-            description: description,
-            options: options,
-            totalVotes: totalVotes,
-            voted: voted,
-            useremail:useremail,
-            voter:voter
-          });
-          res.send({status: "ok"});
-      }
-      catch(error){
-          res.send({status: "error"});
-      }
+
+app.get('/myrate', async (req, res) => {
+    const creater = req.query.creater;
+    const today = new Date();
+    try {
+      const rates = await Rate.find({ creater: { $regex: creater} }); 
+      res.send(rates); 
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error'); // handle errors
+    }
   });
+
+app.get('/searchrate', async (req, res) => {
+  const searchTerm = req.query.searchTerm;
+  try {
+    const rates = await Rate.find({ title: { $regex: searchTerm, $options: 'i' } });
+    console.log(rates);
+    res.send(rates); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.delete('/deleterate', async (req, res) => {
+  const rate_id = req.body.rate_id;
+  try {
+    const result = await Rate.deleteOne({ rate_id:rate_id });
+    if (result.deletedCount === 1) {
+      res.status(200).send('Rate deleted successfully.');
+    } else {
+      res.status(404).send('Rate not found.');
+    }
+  } catch (error) {
+    res.send({status: "error"});
+  }
+});
+
+app.post("/rate",async(req,res)=>{
+    
+    try{
+        Rate.create(req.body);
+        res.send({status: "ok"});
+    }
+    catch(error){
+        res.send({status: "error"});
+
+    }
+});
+
+app.post("/update-rate",async(req,res)=>{
+    const updatedRate = req.body;
+
+  // Find the Poll document to update
+  Rate.findOneAndUpdate({ rate_id: updatedRate.rate_id }, updatedRate, { new: true })
+    .then((rat1) => {
+      if (!updatedRate) {
+        return res.status(404).json({ error: 'Rat not found' });
+      }
+      return res.json(rat1);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: 'Internal server error' });
+    });
+});
+
+
+
+const voteRate = mongoose.model("votes_collection");
+
+app.post("/voterate",async(req,res)=>{
+    try{
+      voteRate.create(req.body);
+        res.send({status: "voteRate added-success"});
+    }
+    catch(error){
+        res.send({status: "voteRate added-failed"});
+
+    }
+});
 
 app.listen(5000, ()=>{
     console.log("Server Stated");
