@@ -54,7 +54,8 @@ const RatingDetailSchema = new mongoose.Schema(
         enddate:{type:Date},
         description: {type: String},
         options: {type: Array},
-        totalVotes:{type: Number}
+        totalVotes:{type: Number},
+        avgRating:{type: Number}
     },
     {
         collection: "rating_collection",
@@ -73,6 +74,5 @@ const rateVoteDetailsSchema = new mongoose.Schema(
     }
 );
 mongoose.model("rate_votes_collection", rateVoteDetailsSchema);
-
 
 
