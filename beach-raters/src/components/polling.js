@@ -175,19 +175,6 @@ function Polling(props) {
     .then((response) => response.json())
     .then((data) => console.log(data));
 
-    fetch("http://localhost:5000/votepoll", {
-      method: 'POST',
-      body: JSON.stringify({voter,poll_id:pollId}),
-      headers: {
-        "Content-Type":"application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-    .then((response) => response.json())
-    .then((data) => console.log(data));
-    setPollModalIsOpen(false);
-
   };
 
   return (
