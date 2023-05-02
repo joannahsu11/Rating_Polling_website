@@ -5,6 +5,7 @@ const UserDetailsSchema = new mongoose.Schema(
         firstName:String,
         lastName:String,
         email: {type: String, unique: true},
+        id: {type: String, unique: true},
         password:String,
         isLoggedIn:Boolean
     },
@@ -51,3 +52,15 @@ const RatingSchema = new mongoose.Schema(
 );
 
 mongoose.model('Rating', RatingSchema);
+
+const voteDetailsSchema = new mongoose.Schema(
+    {
+        voter:{type: String},
+        poll_id:{type: Number}
+    },
+    {
+        collection: "votes_collection",
+    }
+);
+
+mongoose.model("votes_collection", voteDetailsSchema);

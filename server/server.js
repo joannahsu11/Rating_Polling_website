@@ -23,7 +23,7 @@ require("./dbDetails")
 
 const User = mongoose.model("UserInfo");
 app.post("/register",async(req,res)=>{
-    const {firstName,lastName, email, password} = req.body;
+    const {firstName,lastName, id, email, password} = req.body;
 
     const encryptedPassword = await bcrypt.hash(password,10);
     try{
@@ -37,6 +37,7 @@ app.post("/register",async(req,res)=>{
             firstName,
             lastName,
             email,
+            id,
             password: encryptedPassword,
         });
         res.send({status: "ok"});
@@ -48,9 +49,9 @@ app.post("/register",async(req,res)=>{
 });
 
 app.post("/login-user", async(req,res) => {
-    const {email, password} = req.body;
+    const {id, password} = req.body;  //was email
 
-    const user = await User.findOne({email});
+    const user = await User.findOne({id});  //was email
     if(!user){
         return res.send({error: "user not found"});
     }
@@ -71,8 +72,8 @@ app.post("/userData", async (req, res) => {
     const {token} = req.body;
     try {
         const user = jwt.verify(token,JWT_SECRET);
-        const useremail = user.email;
-        User.findOne({email:useremail})
+        const userID = user.id;
+        User.findOne({id:userID})
         .then((data)=>{
             res.send({status:"ok", data: data})
         })

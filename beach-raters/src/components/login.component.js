@@ -6,6 +6,7 @@ export default class Login extends Component {
     super(props)
     this.state = {
       email: "",
+      id:"",
       password: "",
       isLoggedIn:''
     };
@@ -14,10 +15,10 @@ export default class Login extends Component {
 
   handleSubmit(e){
     e.preventDefault();
-    const {email, password} = this.state;
-    this.props.onLogin(email, password);
+    const {id, password} = this.state;
+    this.props.onLogin(id, password);
     
-    console.log(email, password);
+    console.log(id, password);
     fetch("http://localhost:5000/login-user", {
       method: "POST",
       crossDomain: true,
@@ -27,7 +28,7 @@ export default class Login extends Component {
         "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({
-        email,
+        id,
         password
         }),
       })
@@ -49,14 +50,14 @@ export default class Login extends Component {
       <div>
         {!isLoggedIn ? (
           <form onSubmit={this.handleSubmit}>
-            <h3>Sign In</h3>
+            <h3>Log In</h3>
             <div className="mb-3">
-              <label>Email address</label>
+              <label>ID</label>
               <input
-                type="email"
+                type="text"
                 className="form-control"
-                placeholder="Enter email"
-                onChange={(e) => this.setState({ email: e.target.value })}
+                placeholder="Enter ID"
+                onChange={(e) => this.setState({ id: e.target.value })}
               />
             </div>
             <div className="mb-3">
