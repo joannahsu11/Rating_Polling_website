@@ -13,9 +13,11 @@ import sharkHeader from './shark-header.png'
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [id, setId] = useState('');
+  const [name, setName] = useState('');
 
-  const handleLogin = (id) => {
+  const handleLogin = (id,name) => {
     setId(id);
+    setName(name);
     setIsLoggedIn(true);
   };
 
@@ -73,7 +75,7 @@ function App() {
               
               <Route path="/sign-in" element={<Login onLogin={handleLogin}/>} />
               <Route path="/sign-up" element={<SignUp />} />
-              <Route path = "/rating" element={<Rating />}/>
+              <Route path = "/rating" element={<Rating id={id}/>}/>
               <Route path="/polling" element={<Polling id={id}/>}/>
             </Routes>
           </div>
