@@ -33,17 +33,6 @@ const PollingDetailsSchema = new mongoose.Schema(
 
 mongoose.model("polling_collection", PollingDetailsSchema);
 
-const voteDetailsSchema = new mongoose.Schema(
-    {
-        voter:{type: String},
-        poll_id:{type: Number}
-    },
-    {
-        collection: "votes_collection",
-    }
-);
-
-mongoose.model("votes_collection", voteDetailsSchema);
 
 const RatingSchema = new mongoose.Schema(
     {
