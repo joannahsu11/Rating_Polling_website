@@ -4,7 +4,7 @@ import "./poll.css";
 import Modal from "react-modal";
 import { Dropdown } from "react-bootstrap";
 
-function Polling(props) {
+function Rating(props) {
 
   const [allRateData, setAllRateData] = useState([]);
   const [myRateData, setMyRateData] = useState([]);
@@ -358,5 +358,5 @@ function Polling(props) {
   );
 }
 
-export default Polling;
+export default Rating;
 
