@@ -13,9 +13,9 @@ To start the server:
 
 To start our app:
 1. Open the beach-raters folder inside your IDE (Preferably Visual Studio Code)
-1. Right click on App.js (/src/App.js) and "Open in Integrated Terminal"
-2. In the terminal at the bottom, run **npm install**
-3. Once npm install is finished, run **npm start**
+2. Right click on App.js (/src/App.js) and "Open in Integrated Terminal"
+3. In the terminal at the bottom, run **npm install**
+4. Once npm install is finished, run **npm start**
 
 If everything works, it will output the react page locally on your computer
 
