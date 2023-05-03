@@ -2,7 +2,6 @@ import { Tabs, Tab } from 'react-bootstrap';
 import React, { useState, useEffect } from "react";
 import "./poll.css";
 import Modal from "react-modal";
-import { Dropdown } from "react-bootstrap";
 
 function Polling(props) {
 
@@ -19,8 +18,6 @@ function Polling(props) {
   const [selectedPoll, setSelectedPoll] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const [searchTerm, setSearchTerm] = useState('');
-  const [ratingValue, setRatingValue] = useState(0);
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -103,7 +100,7 @@ function Polling(props) {
     const poll_id=allPollData.length+1;
     fetch("http://localhost:5000/poll", {
       method: 'POST',
-      body: JSON.stringify({ poll_id, creater, title, description,enddate,options, totalVotes: 0}),
+      body: JSON.stringify({ poll_id, creater, title, description,enddate,options, totalVotes: 0,like:0}),
       headers: {
         "Content-Type":"application/json",
         Accept: "application/json",
@@ -118,7 +115,6 @@ function Polling(props) {
 
   const handleVote = (pollId, option) => {
     console.log(pollId, option);
-    const voter=props.id;
     const updatedPolls = allPollData.map((poll) => {
       if (poll.poll_id === pollId) {
         const updatedOptions = poll.options.map((o) => {
@@ -162,6 +158,40 @@ function Polling(props) {
 
   };
 
+  const handleLike = (pollId) => {
+    const updatedPolls = allPollData.map((poll) => {
+      if (poll.poll_id === pollId) {
+        return {
+          ...poll,
+          like: poll.like + 1,
+        };
+      }
+
+      return poll;
+    });
+    console.log(updatedPolls);
+    const updatedPoll = updatedPolls.find((poll) => poll.poll_id === pollId);
+    setAllPollData(updatedPolls);
+    setMyPollData(updatedPolls);
+    setSearchedPollData(updatedPolls);
+
+
+    //update results
+    fetch("http://localhost:5000/update-poll", {
+      method: 'POST',
+      body: JSON.stringify(updatedPoll),
+      headers: {
+        "Content-Type":"application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+
+  };
+
+
   return (
     <Tabs defaultActiveKey="tab1" id="tabs">
       <Tab eventKey="tab1" title="All Polls">
@@ -175,21 +205,15 @@ function Polling(props) {
           <p className="poll-description">{poll.description}</p>
           <p className="poll-description">End Date: {poll.enddate}</p>
           <p className="poll-description">Total Votes: {poll.totalVotes}</p>
-          <button className="poll-button" onClick={() => openPoll(poll)}>Show Poll
-          </button>
+          <button className="poll-button" onClick={() => openPoll(poll)}>Show Poll</button>
+          <button className="poll-button" onClick={() => handleLike(poll.poll_id)}>Like ({poll.like})</button>
         </div>
         ))
       }
       <Modal className="pop-up" isOpen={showPollPopup} onRequestClose={closePoll}>
         <h2 className="popup-description">{selectedPoll?.description}</h2>
           {selectedPoll?.options.map((option) => (
-            <button
-              key={option.id}
-              className="option-button"
-              onClick={() => handleVote(selectedPoll?.poll_id, option)}
-            >
-              {option.content}
-            </button>
+            <button key={option.id} className="option-button" onClick={() => handleVote(selectedPoll?.poll_id, option)}>{option.content}</button>
           ))}
           <button onClick={closePoll} className="vote-button">
             Close
@@ -349,6 +373,7 @@ function Polling(props) {
                 <p className="poll-description">{poll.description}</p>
                 <button className="poll-button" onClick={() => openPoll(poll)}>Show Poll
                 </button>
+                <button className="poll-button" onClick={() => handleLike(poll.poll_id)}>Like ({poll.like})</button>
               </div>
               ))
             }
