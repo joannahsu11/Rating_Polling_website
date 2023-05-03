@@ -2,7 +2,6 @@ import { Tabs, Tab } from 'react-bootstrap';
 import React, { useState, useEffect } from "react";
 import "./poll.css";
 import Modal from "react-modal";
-import { Dropdown } from "react-bootstrap";
 
 function Rating(props) {
 
@@ -99,7 +98,7 @@ function Rating(props) {
     const rate_id=allRateData.length+1;
     fetch("http://localhost:5000/rate", {
       method: 'POST',
-      body: JSON.stringify({ rate_id, creater, title, description,enddate,options, totalVotes: 0,avgRating: 0}),
+      body: JSON.stringify({ rate_id, creater, title, description,enddate,options, totalVotes: 0,avgRating: 0, like:0}),
       headers: {
         "Content-Type":"application/json",
         Accept: "application/json",
@@ -165,6 +164,40 @@ function Rating(props) {
 
   };
 
+
+  const handleLike = (rateId) => {
+    const updatedRates = allRateData.map((rate) => {
+      if (rate.rate_id === rateId) {
+        return {
+          ...rate,
+          like: rate.like + 1,
+        };
+      }
+
+      return rate;
+    });
+    console.log(updatedRates);
+    const updatedRate = updatedRates.find((rate) => rate.rate_id === rateId);
+    setAllRateData(updatedRates);
+    setMyRateData(updatedRates);
+    setSearchedRateData(updatedRates);
+
+
+    //update results
+    fetch("http://localhost:5000/update-rate", {
+      method: 'POST',
+      body: JSON.stringify(updatedRate),
+      headers: {
+        "Content-Type":"application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+
+  };
+
   return (
     <Tabs defaultActiveKey="tab1" id="tabs">
       <Tab eventKey="tab1" title="All Rates">
@@ -176,21 +209,15 @@ function Rating(props) {
         <div key={rate.rate_id}>
           <h1 className="poll-title">{rate.title}</h1>
           <p className="poll-description">End Date: {rate.enddate}</p>
-          <button className="poll-button" onClick={() => openPoll(rate)}>Show Rate
-          </button>
+          <button className="poll-button" onClick={() => openPoll(rate)}>Show Rate</button>
+          <button className="poll-button" onClick={() => handleLike(rate.rate_id)}>Like ({rate.like})</button>
         </div>
         ))
       }
       <Modal className="pop-up" isOpen={showRatePopup} onRequestClose={closePoll}>
         <h2 className="popup-description">{selectedRate?.description}</h2>
           {selectedRate?.options.map((option) => (
-            <button
-              key={option.id}
-              className="rating-option-button"
-              onClick={() => handleVote(selectedRate?.rate_id, option)}
-            >
-              {option.content}
-            </button>
+           <button key={option.id} className="option-button" onClick={() => handleVote(selectedRate?.rate_id, option)}>{option.content}</button>
           ))}
           <button onClick={closePoll} className="vote-button">
             Close
@@ -321,6 +348,7 @@ function Rating(props) {
                 <p className="poll-description">{poll.description}</p>
                 <button className="poll-button" onClick={() => openPoll(poll)}>Show Poll
                 </button>
+                <button className="poll-button" onClick={() => handleLike(poll.rate_id)}>Like ({poll.like})</button>
               </div>
               ))
             }
