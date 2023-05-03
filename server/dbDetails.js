@@ -24,7 +24,8 @@ const PollingDetailsSchema = new mongoose.Schema(
         enddate:{type:Date},
         description: {type: String},
         options: {type: Array},
-        totalVotes:{type: Number}
+        totalVotes:{type: Number},
+        like:{type: Number}
     },
     {
         collection: "polling_collection",
@@ -44,8 +45,6 @@ const voteDetailsSchema = new mongoose.Schema(
 );
 mongoose.model("votes_collection", voteDetailsSchema);
 
-
-
 const RatingDetailSchema = new mongoose.Schema(
     {
         rate_id:{type: Number},
@@ -55,7 +54,8 @@ const RatingDetailSchema = new mongoose.Schema(
         description: {type: String},
         options: {type: Array},
         totalVotes:{type: Number},
-        avgRating:{type: Number}
+        avgRating:{type: Number},
+        like:{type: Number}
     },
     {
         collection: "rating_collection",
