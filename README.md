@@ -1,6 +1,3 @@
-### Link to CECS 443 Group 4 Github:
-(https://github.com/jhoang24/CECS-443-)
-
 The 2 main folders of the project is beach-raters and server.
 
 ### Prerequisite:
